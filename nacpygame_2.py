@@ -146,10 +146,8 @@ class NaCPyGame(object):
         self.win.blit(self.graphics["grid"], (0,0))
         self.win.blit(self.graphics["levels"], (300,600))
 
-        # if self.level == "idiot":
         if self.game.level == nac.NaC.Levels.IDIOT:
             self.win.blit(self.graphics["radio_on"], (330,622))
-        # elif self.level == "average":
         elif self.game.level == nac.NaC.Levels.AVERAGE:
             self.win.blit(self.graphics["radio_on"], (332,686))
         else: # "genius"
