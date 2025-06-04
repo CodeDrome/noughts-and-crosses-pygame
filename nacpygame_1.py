@@ -1,3 +1,5 @@
+from typing import Tuple, NamedTuple
+
 from collections import namedtuple
 
 import pygame
@@ -12,8 +14,8 @@ class NaCUI(object):
 
         pygame.init()
         pygame.display.set_caption("CodeDrome NaC")
-
         self.win = pygame.display.set_mode((600,800))
+        
         self.run = True
         self.graphics = self.__init_graphics()
         self.uirects = self.__init_rects()
@@ -25,7 +27,12 @@ class NaCUI(object):
         self.__event_loop()
 
 
-    def __init_graphics(self):
+    def __init_graphics(self) -> None:
+
+        '''
+        Creates a dictionary of all the 
+        images used by the game.
+        '''
 
         graphics = {"background": pygame.image.load('graphics/blackboard_600x800.jpg'),
                     "grid": pygame.image.load('graphics/grid.png'),
@@ -39,7 +46,7 @@ class NaCUI(object):
         return graphics
 
 
-    def __init_rects(self):
+    def __init_rects(self) -> None:
 
         """
         Top left coordinates, size and function
@@ -64,14 +71,14 @@ class NaCUI(object):
         return rects
 
 
-    def __point_in_rect(self, pos, rect):
+    def __point_in_rect(self, pos:Tuple, rect:NamedTuple) -> None:
 
         """
         Check whether a coordinate is within a rectangle
         """
 
         x2 = rect.x + rect.w
-        y2 = rect.y +rect.h
+        y2 = rect.y + rect.h
 
         in_rect = (rect.x <= pos[0] < x2 and
                    rect.y <= pos[1] < y2)
@@ -79,7 +86,7 @@ class NaCUI(object):
         return in_rect
 
 
-    def __click_to_func(self, pos):
+    def __click_to_func(self, pos:Tuple) -> None:
 
         """
         Iterates rectangles and calls corresponding function
@@ -93,19 +100,25 @@ class NaCUI(object):
                 rect.func()
 
 
-    def __handle_left_mousebuttondown(self, pos):
+    def __handle_left_mousebuttondown(self, pos:Tuple) -> None:
 
         self.__click_to_func(pos)
 
 
-    def __level_changed(self, new_level):
+    def __level_changed(self, new_level:str) -> None:
 
         self.level = new_level
 
         self.__draw_game_window()
 
 
-    def __draw_game_window(self):
+    def __draw_game_window(self) -> None:
+
+        '''
+        Draws the entire window after each change.
+        For faster and more action-packed games
+        there are ways to streamline this process.
+        '''
 
         self.win.blit(self.graphics["background"], (0,0))
         self.win.blit(self.graphics["grid"], (0,0))
@@ -129,11 +142,11 @@ class NaCUI(object):
         pygame.display.update()
 
 
-    def __event_loop(self):
+    def __event_loop(self) -> None:
 
         """
         Checks event queue every 50ms
-        for QUIT or MOUSEBUTTONDOWN
+        for QUIT or left MOUSEBUTTONDOWN
         """
 
         while self.run:
@@ -149,7 +162,8 @@ class NaCUI(object):
 
                 elif event.type == pygame.MOUSEBUTTONDOWN:
 
-                    if event.button == 1:
+                    if event.button == 1: # left button
+                        
                         self.__handle_left_mousebuttondown(event.pos)
             
                         self.__draw_game_window()

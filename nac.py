@@ -1,3 +1,5 @@
+from typing import Dict, List, Callable
+
 import random
 from enum import Enum
 
@@ -10,7 +12,7 @@ class NaC(object):
         AVERAGE = 1
         GENIUS = 2
 
-    def __init__(self, on_change, on_game_over):
+    def __init__(self, on_change: Callable, on_game_over: Callable):
 
         self.level = self.Levels.AVERAGE
         self._on_change = on_change
@@ -24,7 +26,7 @@ class NaC(object):
     # "PUBLIC" METHODS
     #--------------------------------------------------------------------
 
-    def human_move(self, square):
+    def human_move(self, square:int) -> None:
 
         """
         To be called by UI when user makes move.
@@ -50,7 +52,7 @@ class NaC(object):
                     self.computer_move()
 
 
-    def computer_move(self):
+    def computer_move(self) -> None:
 
         """
         Called by this class after human_move, or
@@ -69,7 +71,7 @@ class NaC(object):
         self.__check_for_winner()
 
 
-    def new_game(self):
+    def new_game(self) -> None:
 
         """
         Resets relevant attributes to start new game.
@@ -81,20 +83,20 @@ class NaC(object):
         self._on_change(None, None, None)
 
 
-    def get_level_string(self):
+    def get_level_string(self) -> str:
 
         """
         Returns the current level as a human-readable string.
         """
 
-        return ["Idiot", "Average", "Genius"][self.level.value]
+        return self.Levels._member_names_[self.level.value]
 
 
     #--------------------------------------------------------------------
     # "PRIVATE" METHODS
     #--------------------------------------------------------------------
 
-    def __computer_move_idiot(self):
+    def __computer_move_idiot(self) -> None:
 
         """
         Choose square at random
@@ -113,7 +115,7 @@ class NaC(object):
                 break
 
 
-    def __computer_move_average(self):
+    def __computer_move_average(self) -> None:
 
         """
         Choose idiot or genius level
@@ -126,7 +128,7 @@ class NaC(object):
             self.__computer_move_genius()
 
 
-    def __computer_move_genius(self):
+    def __computer_move_genius(self) -> None:
 
         """
         Calculates the move most likely to
@@ -187,14 +189,18 @@ class NaC(object):
         self.__computer_move_idiot()
 
 
-    def __get_row_column(self, square):
+    def __get_row_column(self, square:int) -> Dict:
 
         """
         Get row and column numbers as dictionary
         for squares numbered:
-        1 2 3
-        4 5 6
-        7 8 9
+
+             1 | 2 | 3
+            ----------
+             4 | 5 | 6
+            ----------
+             7 | 8 | 9
+             
         """
 
         column = 0
@@ -216,7 +222,8 @@ class NaC(object):
 
         return {"row": row, "column": column}
 
-    def __check_for_winner(self):
+
+    def __check_for_winner(self) -> bool:
 
         """
         Called after each move to check if there is a
@@ -266,7 +273,7 @@ class NaC(object):
         return False
 
 
-    def __create_win_paths(self):
+    def __create_win_paths(self) -> List:
 
         """
         Create list of the 8 win paths, each with a
@@ -334,7 +341,8 @@ class NaC(object):
 
         return win_paths
 
-    def __populate_win_paths(self):
+
+    def __populate_win_paths(self) -> None:
 
         """
         Set the totals of each win path.
@@ -354,7 +362,8 @@ class NaC(object):
                 elif self._squares[square["row"]][square["column"]] == "O":
                     win_path["nought_count"] += 1
 
-    def __find_empty_square(self, win_path):
+
+    def __find_empty_square(self, win_path:Dict) -> Dict:
 
         """
         Finds an empty square in the given win paths
